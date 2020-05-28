@@ -1,6 +1,11 @@
-﻿using System;
+﻿using Manager;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using Util;
 
 namespace Town
 {
@@ -123,5 +128,5 @@ namespace Town
         {
             return direction;
         }
-    }\
+    }
 }

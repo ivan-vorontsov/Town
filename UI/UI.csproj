@@ -6,4 +6,9 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Manager\Manager.csproj" />
+    <ProjectReference Include="..\Town\Town.csproj" />
+  </ItemGroup>
+
 </Project>

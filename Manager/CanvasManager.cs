@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using Util;
 
 namespace Manager
@@ -6,7 +10,7 @@ namespace Manager
     public class CanvasManager
     {
         private static readonly CanvasManager instance = new CanvasManager();
-        private Size size;
+        private Util.Size size;
         private int columns = 1;
         private int rows = 1;
         public static CanvasManager GetInstance()
@@ -63,7 +67,7 @@ namespace Manager
 
         public void SetSize(double x, double y)
         {
-            this.size = new Size(x, y);
+            this.size = new Util.Size(x, y);
         }
 
         public void Render(Canvas canvas)

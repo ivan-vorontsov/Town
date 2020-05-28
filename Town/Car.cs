@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Manager;
+using System;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using Util;
 
 namespace Town
 {
