@@ -28,14 +28,15 @@ namespace UI
         private static readonly double HEIGHT = 600;
         private static readonly int COLUMNS = 40;
         private static readonly int ROWS = 30;
-        private static readonly double CAR_MX = 0.5;
+        private static readonly double CAR_MX = 3;
+        
 
         private readonly CanvasManager CM;
-        Car car;
-        Car car2;
+        private readonly Car car;
+        private readonly Controller controller;
+
         Timer timer;
         DateTime previousTime;
-        IList<IMultimoveabe> multimover;
         public MainWindow()
         {
             InitializeComponent();
@@ -47,47 +48,32 @@ namespace UI
             CM.SetSize(WIDTH, HEIGHT);
             CM.SetColumns(COLUMNS);
             CM.SetRows(ROWS);
-            multimover = new List<IMultimoveabe>();
-
-            var ringSquare = Ring.NewSquareRing(new Position(WIDTH / 2, HEIGHT / 2));
-            var ringLShape = Ring.NewLShapeRing(new Position(100, 100), Brushes.Gray);
-            var ringOShape = Ring.NewOShape(new Position(500, 500));
-
-            CM.Add(ringSquare);
-            CM.Add(ringLShape);
-            CM.Add(ringOShape);
 
             car = new Car(0,
                               0,
-                              CM.GetXStep() * 2, Brushes.Blue);
+                              CM.GetXStep() * CAR_MX, Brushes.Blue);
             car.SetBlinking(true);
-            var light = new Light(0, 0, 10);
-            var mover = new Mover(light);
-            var circular = new Circular(mover);
-            circular.GoRound(ringSquare);
-            multimover.Add(circular);
-            var directableMover = new DirectableMover(car);
-            var directableCircular = new DirectableCircular(directableMover);
-            directableCircular.GoRound(ringLShape);
-            multimover.Add(directableCircular);
-
-            car2 = new Car(0,
-                              0,
-                              CM.GetXStep() * 2, Brushes.Red);
-            car2.SetBlinking(true);
-            directableMover = new DirectableMover(car2);
-            directableCircular = new DirectableCircular(directableMover);
-            directableCircular.GoRound(ringOShape);
-            multimover.Add(directableCircular);
-
-            CM.Add(light);
             CM.Add(car);
-            CM.Add(car2);
+            var vehicle = new Vehicle_A(car);
+            controller = new Controller(vehicle);
             timer = new Timer();
             timer.Interval = 1000 / 60;
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
             previousTime = DateTime.Now;
+
+            this.KeyDown += MainWindow_KeyDown;
+
+        }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Right)
+                controller.HandleRight();
+            else if (e.Key == Key.Left)
+                controller.HandleLeft();
+            else if (e.Key == Key.Up)
+                controller.HandleUp();
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -102,12 +88,8 @@ namespace UI
                 Dispatcher.Invoke(() =>
                 {
                     MyCanvas.Children.Clear();
-                    foreach (var x in multimover)
-                    {
-                        x.Update(delta);
-                    }
+
                     car.Update(delta);
-                    car2.Update(delta);
                     CM.Render(MyCanvas);
                 });
             }
